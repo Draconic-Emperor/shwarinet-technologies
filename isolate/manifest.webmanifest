@@ -1,0 +1,17 @@
+{
+  "name": "ShwariNet Technologies",
+  "short_name": "ShwariNet",
+  "description": "Professional Wi-Fi testing, network optimization, IT support, and security assessments. Get your Wi-Fi's worth.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F172A",
+  "theme_color": "#0F172A",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
