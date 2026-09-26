@@ -15,9 +15,12 @@ import { motion } from "framer-motion";
 import { CalendarClock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { z } from "zod";
+
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzezjwpb";
+
+const FIELD_NAMES = ["name", "phone", "email", "service", "message"] as const;
+type FieldName = (typeof FIELD_NAMES)[number];
 
 const formSchema = z.object({
   name: z
@@ -33,6 +36,7 @@ const formSchema = z.object({
     .string()
     .min(10, "Message must be at least 10 characters.")
     .max(2000, "Message is too long."),
+  _gotcha: z.string().max(0).optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -64,6 +68,8 @@ const infoCards = [
   },
 ];
 
+type FormspreeFieldError = { field?: unknown; message?: unknown };
+
 export function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -71,26 +77,79 @@ export function Contact() {
     register,
     handleSubmit,
     reset,
+    setError,
     setValue,
     watch,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", phone: "", email: "", service: "", message: "" },
+    defaultValues: {
+      name: "",
+      phone: "",
+      email: "",
+      service: "",
+      message: "",
+      _gotcha: "",
+    },
   });
 
-  const createRequest = useMutation(api.contact.createContactRequest);
   const serviceValue = watch("service");
 
   const onSubmit = handleSubmit(async (values) => {
     setServerError(null);
     try {
-      await createRequest(values);
-      setSubmitted(true);
-      reset();
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: values.name,
+          phone: values.phone,
+          email: values.email,
+          service: values.service,
+          message: values.message,
+          _subject: "New Network Checkup Request — ShwariNet Technologies",
+        }),
+      });
+
+      if (res.ok) {
+        setSubmitted(true);
+        reset();
+        return;
+      }
+
+      // Map Formspree field errors back onto the form when possible.
+      let mapped = false;
+      try {
+        const data: unknown = await res.json();
+        const list = (data as { errors?: unknown })?.errors;
+        if (Array.isArray(list)) {
+          for (const item of list as FormspreeFieldError[]) {
+            const field = typeof item?.field === "string" ? item.field : "";
+            const message =
+              typeof item?.message === "string"
+                ? item.message
+                : "Please check this field.";
+            if ((FIELD_NAMES as readonly string[]).includes(field)) {
+              setError(field as FieldName, { message });
+              mapped = true;
+            }
+          }
+        }
+      } catch {
+        // Response body wasn't JSON — fall through to the generic message.
+      }
+
+      if (!mapped) {
+        setServerError(
+          "Something went wrong sending your request. Please try again or reach us on WhatsApp.",
+        );
+      }
     } catch {
       setServerError(
-        "Something went wrong sending your request. Please try again or reach us on WhatsApp.",
+        "Network error — please check your connection and try again, or reach us on WhatsApp.",
       );
     }
   });
@@ -205,6 +264,16 @@ export function Contact() {
               </div>
             ) : (
               <form onSubmit={onSubmit} noValidate className="space-y-5">
+                {/* Honeypot field for spam protection — hidden from users */}
+                <input
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="hidden"
+                  {...register("_gotcha")}
+                />
+
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="name">Name</Label>

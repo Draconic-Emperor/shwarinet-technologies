@@ -31,21 +31,21 @@ Currently, these variables include auth-specific keys: JWKS, JWT_PRIVATE_KEY, an
 
 ## Deployment (ShwariNet Technologies)
 
-1. **Build** the production bundle:
+The site deploys to **Netlify** (config in `netlify.toml` — build `bun run build`, publish `dist`, SPA redirects, asset caching, security headers).
+
+1. **Add your Netlify credentials** in the project's Keys/API keys tab:
+   - `NETLIFY_AUTH_TOKEN` — Netlify personal access token (Netlify → User Settings → Applications → New access token)
+   - `NETLIFY_SITE_ID` — the Site ID from your Netlify site (Site configuration → General → Site information)
+2. **Deploy the frontend** with the Netlify CLI:
    ```bash
-   bun run build
+   bunx netlify-cli deploy --build --prod
    ```
-2. **Deploy Convex** (contact form backend):
+3. **Deploy Convex** (auth backend used by the /auth and /dashboard routes):
    ```bash
    bun convex deploy
    ```
-3. **Deploy the `dist/` folder** to any static host. `public/_redirects` and `public/_headers` are copied into `dist/` automatically:
-   - **Netlify / Cloudflare Pages:** drag-and-drop `dist/`, or connect the repo (build: `bun run build`, publish dir: `dist`).
-   - **Vercel:** import the repo — framework preset "Vite" works as-is.
-   - **Deno Deploy:** `main.ts` at the repo root serves `dist/` with SPA fallback (`deno run -A main.ts` after building).
-4. **Domain:** point `shwarinet.tech` at the host and update the canonical/OG/sitemap URLs in `index.html`, `public/sitemap.xml`, and `public/robots.txt` if the domain changes.
-
-Contact requests submitted through the site are stored in the `contactRequests` Convex table — view them with `bun convex dashboard` or the Convex dashboard.
+4. **Contact form submissions** are delivered through Formspree (endpoint configured in `src/components/sections/Contact.tsx`) to `shwarinet.tech@gmail.com` — submissions appear in the Formspree dashboard and are emailed to the account that owns form `xzezjwpb`.
+5. **Domain:** point `shwarinet.tech` at the Netlify site (Domain management → Add domain) and update the canonical/OG/sitemap URLs in `index.html`, `public/sitemap.xml`, and `public/robots.txt` if the domain changes.
 
 
 # Using Authentication (Important!)

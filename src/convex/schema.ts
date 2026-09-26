@@ -34,15 +34,6 @@ const schema = defineSchema(
 
     // add other tables here
 
-    contactRequests: defineTable({
-      name: v.string(),
-      phone: v.string(),
-      email: v.string(),
-      service: v.string(),
-      message: v.string(),
-      status: v.optional(v.union(v.literal("new"), v.literal("contacted"), v.literal("closed"))),
-    }).index("by_status", ["status"]),
-
     // tableName: defineTable({
     //   ...
     //   // table fields
