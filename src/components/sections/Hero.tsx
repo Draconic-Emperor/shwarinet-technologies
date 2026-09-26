@@ -51,7 +51,9 @@ function MetricCard({
           <div className="font-display text-sm font-bold tabular-nums text-foreground">
             {value}
             {unit ? (
-              <span className="ml-1 text-[10px] font-medium text-muted-foreground">{unit}</span>
+              <span className="ml-1 text-[10px] font-medium text-muted-foreground">
+                {unit}
+              </span>
             ) : null}
           </div>
         </div>
