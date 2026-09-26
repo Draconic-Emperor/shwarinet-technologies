@@ -1,5 +1,5 @@
 import { Logo } from "@/components/Logo";
-import { site } from "@/lib/site";
+import { site, whatsappPrefilled } from "@/lib/site";
 import { Facebook, Linkedin, Mail, Phone, Twitter, Youtube } from "lucide-react";
 import { Link } from "react-router";
 
@@ -90,7 +90,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href={site.whatsapp}
+                  href={whatsappPrefilled}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2.5 text-sm text-muted-foreground transition-colors hover:text-foreground"

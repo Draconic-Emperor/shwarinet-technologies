@@ -1,4 +1,4 @@
-import { site } from "@/lib/site";
+import { whatsappPrefilled } from "@/lib/site";
 import { motion, useReducedMotion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -16,10 +16,10 @@ export function WhatsAppButton() {
 
   return (
     <motion.a
-      href={site.whatsapp}
+      href={whatsappPrefilled}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Chat with ShwariNet on WhatsApp"
+      aria-label="Chat with ShwariNet on WhatsApp — opens a prefilled message"
       className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/30 outline-none transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-[#25D366]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       initial={false}
       animate={{

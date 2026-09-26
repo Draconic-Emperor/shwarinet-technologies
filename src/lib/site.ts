@@ -9,7 +9,10 @@ export const site = {
   phoneHref: "tel:+254782123320",
   email: "shwarinet.tech@gmail.com",
   whatsapp: "https://wa.me/254782123320",
+  whatsappMessage: "Hello ShwariNet, I need assistance with my network.",
 };
+
+export const whatsappPrefilled = `${site.whatsapp}?text=${encodeURIComponent(site.whatsappMessage)}`;
 
 export const navLinks = [
   { label: "Home", href: "#home" },

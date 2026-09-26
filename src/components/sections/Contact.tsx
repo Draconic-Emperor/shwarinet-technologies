@@ -17,7 +17,9 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/xzezjwpb";
+const FORMSPREE_ENDPOINT =
+  import.meta.env.VITE_FORMSPREE_ENDPOINT ??
+  "https://formspree.io/f/xzezjwpb";
 
 const FIELD_NAMES = ["name", "phone", "email", "service", "message"] as const;
 type FieldName = (typeof FIELD_NAMES)[number];
