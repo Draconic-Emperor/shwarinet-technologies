@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { site } from "@/lib/site";
+import { site, whatsappPrefilled } from "@/lib/site";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { CalendarClock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
@@ -60,7 +60,7 @@ const infoCards = [
     icon: MessageCircle,
     label: "WhatsApp",
     value: "Chat instantly",
-    href: site.whatsapp,
+    href: whatsappPrefilled,
   },
   {
     icon: MapPin,
